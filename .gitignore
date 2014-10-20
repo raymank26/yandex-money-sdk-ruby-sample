@@ -21,3 +21,4 @@ tmp
 mkmf.log
 .DS_Store
 *.swp
+vendor

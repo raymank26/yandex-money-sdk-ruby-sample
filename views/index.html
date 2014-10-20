@@ -1,0 +1,102 @@
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Yandex money php sample</title>
+    <link href="http://yandex.st/bootstrap/3.1.1/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://code.jquery.com/jquery-1.11.1.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+
+    <link rel="stylesheet" href="http://yandex.st/highlightjs/8.2/styles/github.min.css">
+    <script src="http://yandex.st/highlightjs/8.2/highlight.min.js"></script>
+
+  <style>
+        body {
+          padding-top: 20px;
+          padding-bottom: 20px;
+        }
+
+        .container {
+          max-width: 730px;
+        }
+        .accordion-toggle .panel-title:after {
+            /* symbol for "opening" panels */
+            font-family: 'Glyphicons Halflings';  /* essential for enabling glyphicon */
+            float: right;        /* adjust as needed */
+            color: grey;         /* adjust as needed */
+            content: "\e080";    /* adjust as needed, taken from bootstrap.css */
+        }
+        .accordion-toggle.collapsed .panel-title:after {
+            /* symbol for "collapsed" panels */
+            content: "\e114";    /* adjust as needed, taken from bootstrap.css */
+        }
+        .logo {
+            margin-right: 10px;
+        }
+        .panel-heading {
+            cursor: pointer;
+        }
+    </style>
+</head>
+<html>
+<body>
+    <div class="container">
+        <div class="header clearfix">
+            {% block logo %}
+            <a href="">
+                <img class="logo pull-left" width="50px" src="http://api.yandex.com/money/money1.png" alt="">
+            </a>
+            {% endblock %}
+            <h2>Yandex.Money PHP sample</h2>
+            {% block breadcrumbs %}
+            {% endblock %}
+      </div>
+    <p>You can check out docs <a href="http://api.yandex.com/money/doc/dg/concepts/About.xml">in English</a> and <a href="http://api.yandex.ru/money/doc/dg/concepts/About.xml">in Russian</a>.</p>
+    {% block result %}
+        <h3>Payments from the Yandex.Money wallet</h3>
+        <form action="obtain-token/" method="POST">
+            <label>Scope</label>
+            <p><input readonly class="form-control" type="text" name="scope" value='account-info operation-history payment.to-account("410011161616877").limit(30,1)'/></p>
+            <p><button class="btn btn-primary" type="submit">Obtain token</button></p>
+        </form>
+        <p>Documentation about scope permissions is <a href="http://api.yandex.ru/money/doc/dg/concepts/protocol-rights.xml">here</a>.</p>
+        <strong>Note:</strong> Take care that HOST of the sample app MUST be equal to host of REDIRECT_URI(constants.php).
+
+        <h3>Payments from bank cards without authorization</h3>
+        <h4>To mobile phone</h4>
+        Make a payment to phone number
+        <form action="process-external/" method="POST">
+            <div class="form-group">
+                <label for="">Phone number</label>
+                <input type="text" class="form-control" name="phone" placeholder="Phone number for payment. For example: 79233630564">
+            </div>
+            <div class="form-group">
+                <label for="">Value(RUB)</label>
+                <input type="text" class="form-control" name="value" placeholder="1" value="1">
+            </div>
+            <p><button class="btn btn-primary" type="submit">Pay with card</button></p>
+        </form>
+        <p>
+            <strong>Note:</strong> Phone number in ITU-T E.164 format: the full number, starting with 7.
+Only numbers from mobile service providers in Russia are supported. Example: 79219990099
+        </p>
+        <h4>To wallet</h4>
+        <form action="wallet/process-external/" method="POST">
+            <div class="form-group">
+                <label for="">Wallet</label>
+                <input type="text" class="form-control" name="wallet" placeholder="Wallet id. For example 410012514683192"> 
+            </div>
+            <div class="form-group">
+                <label for="">Value(RUB)</label>
+                <input type="text" class="form-control" name="value" placeholder="1" value="1">
+            </div>
+            <p><button class="btn btn-primary" type="submit">Pay with card</button></p>
+        </form>
+    {% endblock %}
+    </div>
+    <script>
+        hljs.initHighlightingOnLoad();
+    </script>
+
+    {% include "helpers/metrika.html" %}
+</body>
+</html>

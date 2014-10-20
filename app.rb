@@ -1,12 +1,25 @@
 require 'sinatra'
 require 'yandex_money/api'
 require 'yaml'
+require 'liquid_blocks'
+#require 'liquid_inheritance'
+require 'liquid'
+require_relative 'liquid_path'
 
-# Enable sessions for storing token safely
-enable :sessions
+configure do
+  set :views, settings.root + '/views'
+  # Enable sessions for storing token safely
+  enable :sessions
+  Liquid::Template.file_system = LocalFileSystem.new(File.join(File.dirname(__FILE__),'views2'))
+  puts Liquid::Template.file_system.full_path("helpers/metrica.html")
 
-# Change this for your application (http://www.sinatrarb.com/intro.html#Using%20Sessions)
-set :session_secret, 'mysupersecret'
+  # Change this for your application (http://www.sinatrarb.com/intro.html#Using%20Sessions)
+  set :session_secret, 'mysupersecret'
+
+  Tilt.register Tilt::LiquidTemplate, 'html'
+end
+
+
 
 # To get this data, register application at https://sp-money.yandex.ru/myservices/new.xml
 CONFIG = {
@@ -15,8 +28,9 @@ CONFIG = {
   client_secret: "B21956F4A83DF4CBDB464DCB6697BF5364B3A9B036E665E0D522AD0E9A87884D0080A165D0F3BB71B48506B5DA61C822D51CF4CC587A87E4C9729908A0B0F67B"
 } 
 
+
 get '/' do
-  erb :index, locals: { token: session[:token] }
+  liquid :index, :locals => {}
 end
 
 get '/account-info' do

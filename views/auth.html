@@ -1,0 +1,32 @@
+{% extends 'index.html' %}
+
+{% block logo %}
+<a href="{{ parent_url }}/">
+    <img class="logo pull-left" width="50px" src="http://api.yandex.com/money/money1.png" alt="">
+</a>
+{% endblock %}
+
+{% block breadcrumbs %}
+<ol class="breadcrumb">
+  <li><a href="{{ parent_url }}/">Home</a></li>
+  <li class="active">Wallet</li>
+</ol>
+{% endblock %}
+
+{% block result %}
+<h2>API Methods</h2>
+
+{% for method in methods %}
+<h2 class="panel-title">{{ method.name }} </h2>
+<p> {{ method.info }}</p>
+{% if method.is_error %}
+<div class="alert alert-danger" role="alert"><strong>Error! </strong>{{ method.message }}</div>
+{% else %}
+  {% include 'helpers/panel_source.html' with
+      {'title': "Source code", 'body': method.code, 'id': 100 + loop.index } only %}
+  {% include 'helpers/panel_source.html' with
+      {'title': "Response", 'body': method.response|json_encode(json_format_options), 'id': loop.index, "is_collapsed": true } only %}
+{% endif %}
+{% endfor %}
+    
+{% endblock %}
