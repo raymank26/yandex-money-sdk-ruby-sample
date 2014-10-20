@@ -5,12 +5,13 @@ require 'liquid_blocks'
 #require 'liquid_inheritance'
 require 'liquid'
 require_relative 'liquid_path'
+require_relative 'constants'
 
 configure do
   set :views, settings.root + '/views'
   # Enable sessions for storing token safely
   enable :sessions
-  Liquid::Template.file_system = LocalFileSystem.new(File.join(File.dirname(__FILE__),'views2'))
+  Liquid::Template.file_system = LocalFileSystem.new(File.join(File.dirname(__FILE__),'views'))
   puts Liquid::Template.file_system.full_path("helpers/metrica.html")
 
   # Change this for your application (http://www.sinatrarb.com/intro.html#Using%20Sessions)
@@ -22,15 +23,18 @@ end
 
 
 # To get this data, register application at https://sp-money.yandex.ru/myservices/new.xml
-CONFIG = {
-  client_id: "B08E93852757D204A4FCADA4A229835D7AABD3A2B106B46ECCB245D70D73C515",
-  redirect_uri: "http://127.0.0.1:4567/redirect",
-  client_secret: "B21956F4A83DF4CBDB464DCB6697BF5364B3A9B036E665E0D522AD0E9A87884D0080A165D0F3BB71B48506B5DA61C822D51CF4CC587A87E4C9729908A0B0F67B"
-} 
-
-
 get '/' do
   liquid :index, :locals => {}
+end
+
+post '/obtain-token/' do
+  scope = params[:scope]
+  api = YandexMoney::Api.new(
+    client_id: Constants::CLIENT_ID,
+    redirect_uri: Constants::REDIRECT_URI,
+    scope: scope
+  )
+  redirect api.client_url
 end
 
 get '/account-info' do
