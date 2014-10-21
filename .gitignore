@@ -20,6 +20,6 @@ tmp
 *.a
 mkmf.log
 .DS_Store
-*.swp
 vendor
 constants.rb
+*.sw*

@@ -22,10 +22,17 @@
 {% if method.is_error %}
 <div class="alert alert-danger" role="alert"><strong>Error! </strong>{{ method.message }}</div>
 {% else %}
-  {% include 'helpers/panel_source.html' with
-      {'title': "Source code", 'body': method.code, 'id': 100 + loop.index } only %}
-  {% include 'helpers/panel_source.html' with
-      {'title': "Response", 'body': method.response|json_encode(json_format_options), 'id': loop.index, "is_collapsed": true } only %}
+  {% assign title = "Source code" %}
+  {% assign body = method.code %}
+  {% assign id = forloop.index|plus:100 %}
+  {% assign is_collapsed = false %}
+  {% include 'helpers/panel_source.html' %}
+
+  {% assign title = "Response" %}
+  {% assign body = method.response %}
+  {% assign id = forloop.index %}
+  {% assign is_collapsed = true %}
+  {% include 'helpers/panel_source.html' %}
 {% endif %}
 {% endfor %}
     

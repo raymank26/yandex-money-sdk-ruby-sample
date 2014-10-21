@@ -1,4 +1,6 @@
 require 'liquid'
+require 'json'
+require 'pry-byebug'
 
 class LocalFileSystem
   attr_accessor :root
@@ -27,3 +29,32 @@ class LocalFileSystem
     full_path
   end
 end
+
+module LiquidFilters
+  def plus(a, b)
+    (a + b).to_s
+  end
+end
+
+ Liquid::Template.register_filter(LiquidFilters)
+
+ #class Include < Liquid::Tag
+   #def initialize(tag_name, markup, options)
+     #super
+     #syntax = /(#{QuotedFragment}+)(\s+(?:with|for)\s+(#{QuotedFragment}+))?/o
+
+     #if markup =~ syntax
+
+       #template_name = $1
+       #variables = $3
+       #puts %Q{templates_name is "#{template_name}"}
+       #puts %Q{variables is "#{variables}"}
+     #end
+   #end
+
+   #def render(context)
+     #""
+   #end
+ #end
+
+ #Liquid::Template.register_tag('include2', Include)
