@@ -7,6 +7,7 @@ require 'liquid'
 require_relative 'liquid_path'
 require_relative 'constants'
 require 'pry-byebug'
+require "addressable/uri"
 
 configure do
   set :views, settings.root + '/views'
@@ -112,7 +113,6 @@ get '/redirect/' do
     'parent_url' => ""
   }
 end
-
 
 __END__
 
