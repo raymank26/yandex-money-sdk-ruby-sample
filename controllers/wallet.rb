@@ -9,10 +9,16 @@ module Wallet
     app.get '/' do
       liquid :index
     end
+    app.get '/mustache' do
+      mustache :index, :locals => {
+        :some => ["foo", "bar"]
+      }
+    end
 
     app.post '/obtain-token/' do
       scope = params[:scope]
-      puts Constants::REDIRECT_URI
+      #binding.pry
+
       api = YandexMoney::Api.new(
         client_id: Constants::CLIENT_ID,
         redirect_uri: Constants::REDIRECT_URI,
@@ -28,7 +34,6 @@ module Wallet
       )
       temp_api.code = params[:code]
       token = temp_api.obtain_token(Constants::CLIENT_SECRET)
-      #puts token
 
       api = YandexMoney::Api.new(token: token)
 
@@ -55,7 +60,6 @@ module Wallet
           You have less then 3 records in your payment history
         eos
       else
-        puts operation_history.operations
         operation_history_info = <<-eos
           The last 3 payment titles are: #{operation_history.operations[0]['title']},
           #{operation_history.operations[1]['title']}, #{operation_history.operations[2]['title']}
@@ -64,6 +68,23 @@ module Wallet
 
       format_json = lambda do |open_struct|
         JSON.pretty_generate open_struct.to_h
+      end
+
+      template_meta = lambda do |method, index|
+        method['includes'] = [{
+          "id" => index,
+          "title" => "Source code",
+          "is_collapsed" => false,
+          "body" => method['code']
+        },
+        {
+          "id" => index + 100,
+          "title" => "Response",
+          "is_collapsed" => true,
+          "body" => method['response']
+        }
+        ]
+        return method
       end
 
       liquid :auth, :locals => {
@@ -91,7 +112,7 @@ module Wallet
             'is_error' => false,
             'response' => format_json.call(process_payment)
           }
-        ],
+        ].map.with_index(0, &template_meta),
         'json_format_options' => "options_here",
         'parent_url' => ""
       }

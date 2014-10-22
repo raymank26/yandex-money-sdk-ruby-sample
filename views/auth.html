@@ -22,17 +22,9 @@
 {% if method.is_error %}
 <div class="alert alert-danger" role="alert"><strong>Error! </strong>{{ method.message }}</div>
 {% else %}
-  {% assign title = "Source code" %}
-  {% assign body = method.code %}
-  {% assign id = forloop.index|plus:100 %}
-  {% assign is_collapsed = false %}
-  {% include 'helpers/panel_source.html' %}
-
-  {% assign title = "Response" %}
-  {% assign body = method.response %}
-  {% assign id = forloop.index %}
-  {% assign is_collapsed = true %}
-  {% include 'helpers/panel_source.html' %}
+    {% for panel in method.includes %} 
+          {% include 'helpers/panel_source.html' %}
+    {% endfor %}
 {% endif %}
 {% endfor %}
     
