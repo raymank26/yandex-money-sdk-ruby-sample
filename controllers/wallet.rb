@@ -6,14 +6,6 @@ require "addressable/uri"
 
 module Wallet
   def self.registered(app)
-    app.get '/' do
-      liquid :index
-    end
-    app.get '/mustache' do
-      mustache :index, :locals => {
-        :some => ["foo", "bar"]
-      }
-    end
 
     app.post '/obtain-token/' do
       scope = params[:scope]
@@ -33,11 +25,20 @@ module Wallet
         redirect_uri: Constants::REDIRECT_URI,
       )
       temp_api.code = params[:code]
-      token = temp_api.obtain_token(Constants::CLIENT_SECRET)
 
+      token = temp_api.obtain_token(Constants::CLIENT_SECRET)
       api = YandexMoney::Api.new(token: token)
 
-      account_info = api.account_info
+      begin
+        # check that account info call is OK.
+        account_info = api.account_info
+      rescue
+          return liquid :error, :locals => {
+            'text' => 'Token error. Go to the home page and repeat request',
+            'home' => '../'
+          }
+      end
+
       operation_history = api.operation_history :records => 3
       request_payment = api.request_payment({
         :pattern_id => "p2p",
@@ -114,7 +115,8 @@ module Wallet
           }
         ].map.with_index(0, &template_meta),
         'json_format_options' => "options_here",
-        'parent_url' => ""
+        'home' => "",
+        'language' => 'Ruby'
       }
     end
   end
