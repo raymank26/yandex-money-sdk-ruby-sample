@@ -1,0 +1,6 @@
+# To get this data, register application at https://sp-money.yandex.ru/myservices/new.xml
+module Constants
+  CLIENT_ID = "CLIENT_ID"
+  REDIRECT_URI = "REDIRECT_URI"
+  CLIENT_SECRET = "CLIENT_SECRET"
+end

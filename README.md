@@ -10,17 +10,7 @@ Fetch source code and install dependencies
   bundle install
 ```
 
-Update application configuration (`CONFIG`) in `app.rb` file.
-
-```ruby
-  # app.rb
-  # To get this data, register application at https://sp-money.yandex.ru/myservices/new.xml
-  CONFIG = {
-    client_id: "B08E93852757D204A4FCADA4A229835D7AABD3A2B106B46ECCB245D70D73C515",
-    redirect_uri: "http://127.0.0.1:4567/redirect",
-    client_secret: "B21956F4A83DF4CBDB464DCB6697BF5364B3A9B036E665E0D522AD0E9A87884D0080A165D0F3BB71B48506B5DA61C822D51CF4CC587A87E4C9729908A0B0F67B"
-  }
-```
+Copy `constants.rb.sample` to `constants.rb` and fill the constants.
 
 Now you can run application:
 
